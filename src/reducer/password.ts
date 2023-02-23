@@ -35,7 +35,7 @@ const passwordSlice = createSlice({
       state.push(action.payload);
     },
     remove: (state, action: PayloadAction<string>) => {
-      state = state.filter(item => item.id !== action.payload);
+      state.splice(state.findIndex(item => item.id === action.payload), 1);
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
