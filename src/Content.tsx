@@ -1,16 +1,10 @@
-import { Button, Checkbox, Form, Input, InputNumber, Select, Tooltip } from "antd";
+import { Button, Form, Input, Select, Tooltip } from "antd";
 import { CopyOutlined } from '@ant-design/icons';
-
-import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import PassGen from "./PassGen";
 
 function Content() {
-  const onChange = (e: CheckboxChangeEvent) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
+  const [raw, setRaw] = useState("");
 
-  const setLen = (value: number) => {
-    console.log('changed', value);
-  };
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
@@ -25,16 +19,7 @@ function Content() {
     <div className="flex flex-col items-center">
 
       {/* 密码生成器 */}
-      <div className="flex items-center mt-8">
-        <Checkbox onChange={onChange}>数字</Checkbox>
-        <Checkbox onChange={onChange}>小写</Checkbox>
-        <Checkbox onChange={onChange}>大写</Checkbox>
-        <Checkbox onChange={onChange}>符号</Checkbox>
-        <div className="flex items-center">
-          <span className="ml-4 mr-2">长度:</span><InputNumber min={1} max={10} defaultValue={3} onChange={() => { setLen }} />
-        </div>
-        <Button type="primary" className="ml-4">生成</Button>
-      </div>
+      <PassGen onGen={setRaw}></PassGen>
 
       {/* 加密保存 */}
       <Form
@@ -49,30 +34,30 @@ function Content() {
       >
         <Form.Item
           label="应用密码"
-          name="randompw"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          name="raw"
+          rules={[{ required: true, message: '请输入或生成密码' }]}
         >
           <Input.Group compact>
             <Input
               style={{ width: 'calc(100% - 32px)' }}
-              defaultValue="git@github.com:ant-design/ant-design.git"
+              value={raw}
             />
-            <Tooltip title="copy git url">
+            <Tooltip title="复制密码">
               <Button icon={<CopyOutlined />} />
             </Tooltip>
           </Input.Group>
         </Form.Item>
         <Form.Item
           label="应用名称"
-          name="randompw"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          name="name"
+          rules={[{ required: true, message: '请输入应用名称' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label="加密算法"
           name="algo"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[{ required: true, message: '请选择加密算法' }]}
         >
           <Select
             defaultValue="lucy"
@@ -90,7 +75,7 @@ function Content() {
         <Form.Item
           label="加密密码"
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: '请输入加密密码' }]}
         >
           <Input.Password />
         </Form.Item>
@@ -98,9 +83,8 @@ function Content() {
         <Form.Item
           label="加密结果"
           name="result"
-          rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <Input />
+          <Input disabled />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
