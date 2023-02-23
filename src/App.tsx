@@ -11,7 +11,7 @@ function App() {
       <header><TopBar></TopBar></header>
       <div className="flex">
         <aside className="w-200px"><SideBar></SideBar></aside>
-        <main className="px-4"><Content></Content></main>
+        <main className="px-4 flex-grow"><Content></Content></main>
       </div>
     </div>
   )
