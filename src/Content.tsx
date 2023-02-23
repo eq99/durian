@@ -2,6 +2,9 @@ import { Button, Form, Input, Select, Tooltip } from "antd";
 import { CopyOutlined } from '@ant-design/icons';
 import PassGen from "./PassGen";
 import { encrypt } from "./lib";
+import { useAppDispatch } from "./store";
+import passwordSlice from "./reducer/password";
+import { nanoid } from "nanoid";
 
 export interface Modal {
   raw: string
@@ -13,6 +16,7 @@ export interface Modal {
 function Content() {
   const [raw, setRaw] = useState("");
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     form.setFieldValue("raw", raw);
@@ -20,8 +24,15 @@ function Content() {
 
 
   const onFinish = (values: Modal) => {
-    let res = encrypt(values.raw, values.secret, values.algo);
-    form.setFieldValue("hash", res);
+    let hash = encrypt(values.raw, values.secret, values.algo);
+    form.setFieldValue("hash", hash);
+    dispatch(passwordSlice.actions.create({
+      id: nanoid(10),
+      subject: values.subject,
+      algo: values.algo,
+      hash,
+      createdAt: new Date().toString()
+    }));
   };
 
   const onFinishFailed = (errorInfo: any) => {

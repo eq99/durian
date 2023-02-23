@@ -1,15 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { Provider } from "react-redux";
+import { RouterProvider } from "react-router-dom";
 import { store } from "./store";
 import 'virtual:windi.css';
 import 'antd/dist/reset.css';
 
+import router from "./router";
+
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </React.StrictMode>
   </Provider>
 );
