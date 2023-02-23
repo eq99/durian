@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";
-import Content from "./Content";
+import Content from "./Create";
 import Settings from "./Settings";
 import {
   createBrowserRouter,
@@ -19,8 +19,8 @@ function App() {
     <div>
       <header><TopBar></TopBar></header>
       <div className="flex">
-        <aside className="w-200px flex-shrink-0"><SideBar></SideBar></aside>
-        <main className="px-4 flex-grow">
+        {/* <aside className="w-180px flex-shrink-0"><SideBar></SideBar></aside> */}
+        <main className="px-4 py-2 flex-grow">
           <Outlet />
         </main>
       </div>
