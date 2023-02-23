@@ -10,7 +10,7 @@ function App() {
     <div>
       <header><TopBar></TopBar></header>
       <div className="flex">
-        <aside className="w-200px"><SideBar></SideBar></aside>
+        <aside className="w-240px flex-shrink-0"><SideBar></SideBar></aside>
         <main className="px-4 flex-grow"><Content></Content></main>
       </div>
     </div>

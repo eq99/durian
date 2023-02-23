@@ -29,7 +29,7 @@ export function genPassword(sample: Sample, len = 10) {
   }
 
   if (str.length === 0) {
-    return "bagayalu";
+    return "";
   }
 
   let res = "";
@@ -38,4 +38,10 @@ export function genPassword(sample: Sample, len = 10) {
   }
 
   return res;
+}
+
+
+export function encrypt(raw: string, secret: string, algo: string) {
+
+  return raw + secret + algo
 }

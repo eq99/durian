@@ -1,46 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Divider, Input, List, Skeleton } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useAppSelector, useAppDispatch } from './store';
 import Search from 'antd/es/input/Search';
+import type { Password } from "./reducer/password"
 
-interface DataType {
-  gender: string;
-  name: {
-    title: string;
-    first: string;
-    last: string;
-  };
-  email: string;
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  nat: string;
-}
 
 const SideBar = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
+  // const [data, setData] = useState<DataType[]>([]);
+  const data = useAppSelector(state => state.password);
 
   const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    // if (loading) {
+    //   return;
+    // }
+    // setLoading(true);
+    // fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
+    //   .then((res) => res.json())
+    //   .then((body) => {
+    //     setData([...data, ...body.results]);
+    //     setLoading(false);
+    //   })
+    //   .catch(() => {
+    //     setLoading(false);
+    //   });
+    console.log("loading more")
   };
 
   useEffect(() => {
-    loadMoreData();
+
   }, []);
 
   const onSearch = (value: string) => console.log(value);
@@ -66,23 +55,21 @@ const SideBar = () => {
           endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
           scrollableTarget="scrollableDiv"
         >
-
           <List
             dataSource={data}
             renderItem={(item) => (
-              <List.Item key={item.email}>
+              <List.Item key={item.id}>
                 <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={<a href="https://ant.design">{item.name.last}</a>}
-                  description={item.email}
+                  // avatar={<Avatar src={item.picture.large} />}
+                  title={<a>{item.subject}</a>}
+                  description={item.createdAt}
                 />
-                <div>Content</div>
               </List.Item>
             )}
           />
         </InfiniteScroll>
       </div>
-    </div>
+    </div >
   );
 };
 
