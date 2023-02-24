@@ -69,6 +69,7 @@ function Content(props: Props) {
   return (
     <div className="flex flex-col items-center">
       {contextHolder}
+
       {/* 密码生成器 */}
       <PassGen onGen={setRaw}></PassGen>
 
@@ -80,7 +81,7 @@ function Content(props: Props) {
         wrapperCol={{ span: 16 }}
         initialValues={{
           subject: props.data?.subject || "",
-          algo: props.data?.algo || "",
+          algo: props.data?.algo || algoOptions[0].value,
           hash: props.data?.hash || ""
         }}
         onFinish={onFinish}
