@@ -25,7 +25,6 @@ export interface Props {
 function Content(props: Props) {
   const [raw, setRaw] = useState("");
   const [secret, setSecret] = useState("");
-  const [hash, setHash] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
   const [form] = Form.useForm();
@@ -72,9 +71,6 @@ function Content(props: Props) {
     await writeText(raw);
   }
 
-  async function handleCopyHash() {
-    await writeText(hash);
-  }
 
   return (
     <div className="flex flex-col items-center">
