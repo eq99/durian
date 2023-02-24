@@ -1,3 +1,6 @@
+import CryptoJS from "crypto-js";
+
+
 const digits = "0123456789";
 const lower = 'abcdefghijklmnopqrstuvwxyz';
 const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -42,6 +45,37 @@ export function genPassword(sample: Sample, len = 10) {
 
 
 export function encrypt(raw: string, secret: string, algo: string) {
+  return encrypt_aes(raw, secret);
+}
 
-  return raw + secret + algo
+export function decrypt(hash: string, secret: string, algo: string) {
+  return decrypt_aes(hash, secret);
+}
+
+export function encrypt_aes(raw: string, secret: string) {
+  const message = CryptoJS.enc.Utf8.parse(raw);
+  const secretPassphrase = CryptoJS.enc.Utf8.parse(CryptoJS.SHA256(secret).toString());
+  // const iv = CryptoJS.enc.Utf8.parse('0123456789asdfgh');
+
+  return CryptoJS.AES.encrypt(message, secretPassphrase, {
+    mode: CryptoJS.mode.ECB,
+    paddding: CryptoJS.pad.Pkcs7,
+    // iv,
+  }).ciphertext.toString().toUpperCase();
+}
+
+export function decrypt_aes(hash: string, secret: string) {
+  let encryptedHexStr = CryptoJS.enc.Hex.parse(hash);
+  let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+  const secretPassphrase = CryptoJS.enc.Utf8.parse(CryptoJS.SHA256(secret).toString());
+  // const iv = CryptoJS.enc.Utf8.parse('0123456789asdfgh');
+  return CryptoJS.AES.decrypt(
+    srcs,
+    secretPassphrase,
+    {
+      mode: CryptoJS.mode.ECB,
+      paddding: CryptoJS.pad.Pkcs7,
+      // iv,
+    }
+  ).toString(CryptoJS.enc.Utf8)
 }

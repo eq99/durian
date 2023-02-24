@@ -11,10 +11,11 @@ import {
 
 import { useAppDispatch } from './store';
 
+export interface Props {
+  data: Password[]
+}
 
-
-
-export default function App() {
+export default function App(props: Props) {
   const dispatch = useAppDispatch();
   const columns: ColumnsType<Password> = [
     {
@@ -63,9 +64,7 @@ export default function App() {
       ),
     },
   ];
-
-  const data = useAppSelector(state => state.password);
   return (
-    <Table rowKey={(record) => record.id} columns={columns} dataSource={data} />
+    <Table rowKey={(record) => record.id} columns={columns} dataSource={props.data} />
   )
 };

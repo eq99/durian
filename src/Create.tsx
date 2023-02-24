@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select, Tooltip } from "antd";
 import { CopyOutlined } from '@ant-design/icons';
 import PassGen from "./PassGen";
-import { encrypt } from "./lib";
+import { encrypt, decrypt } from "./lib";
 import { useAppDispatch } from "./store";
 import passwordSlice from "./reducer/password";
 import { nanoid } from "nanoid";
@@ -12,6 +12,10 @@ export interface Modal {
   algo: string
   secret: string
 }
+
+const algoOptions = [
+  { value: 'aes', label: 'AES' },
+]
 
 function Content() {
   const [raw, setRaw] = useState("");
@@ -52,7 +56,7 @@ function Content() {
         form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{ algo: "lucy" }}
+        initialValues={{ algo: algoOptions[0].value }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -89,12 +93,7 @@ function Content() {
         >
           <Select
             style={{ width: 120 }}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
+            options={algoOptions }
           />
         </Form.Item>
 
