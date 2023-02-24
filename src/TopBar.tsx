@@ -1,6 +1,10 @@
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { message } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/api/shell';
+
+
+import { SaveFilled, GithubOutlined, FileOutlined } from '@ant-design/icons';
 
 const items: MenuProps['items'] = [
   {
@@ -8,66 +12,9 @@ const items: MenuProps['items'] = [
     key: 'file',
     children: [
       {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
-      },
-      {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Edit',
-    key: 'edit',
-    children: [
-      {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
-      },
-      {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
+        label: <span onClick={async (e) => { await message("还没实现") }}>另存为</span>,
+        key: 'saveAs',
+        icon: <SaveFilled />
       },
     ],
   },
@@ -76,35 +23,21 @@ const items: MenuProps['items'] = [
     key: 'help',
     children: [
       {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
+        label: (<span onClick={async () => {
+          await message(`$AppLocalData/data.json`);
+        }}>数据文件夹</span>),
+        key: 'showDataFolder',
+        icon: <FileOutlined />
       },
       {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
+        label: (<span onClick={() => {
+          open("https://github.com/xiayulu/durian");
+        }}>GitHub</span>),
+        key: 'github',
+        icon: <GithubOutlined />
       },
     ],
-  },
+  }
 ];
 
 export default function TopBar() {

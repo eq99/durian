@@ -5,6 +5,7 @@ import { encrypt, decrypt } from "./lib";
 import { useAppDispatch } from "./store";
 import passwordSlice, { Password } from "./reducer/password";
 import { nanoid } from "nanoid";
+import { writeText } from '@tauri-apps/api/clipboard';
 
 export interface Model {
   raw: string
@@ -24,6 +25,7 @@ export interface Props {
 function Content(props: Props) {
   const [raw, setRaw] = useState("");
   const [secret, setSecret] = useState("");
+  const [hash, setHash] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
   const [form] = Form.useForm();
@@ -66,6 +68,14 @@ function Content(props: Props) {
     setRaw(de);
   }
 
+  async function handleCopyRaw() {
+    await writeText(raw);
+  }
+
+  async function handleCopyHash() {
+    await writeText(hash);
+  }
+
   return (
     <div className="flex flex-col items-center">
       {contextHolder}
@@ -101,7 +111,7 @@ function Content(props: Props) {
               <Input />
             </Form.Item>
             <Tooltip title="复制密码">
-              <Button icon={<CopyOutlined />} />
+              <Button icon={<CopyOutlined />} onClick={() => handleCopyRaw()} />
             </Tooltip>
           </Input.Group>
         </Form.Item>
@@ -131,17 +141,10 @@ function Content(props: Props) {
           <Input.Password onChange={(e) => setSecret(e.target.value)} />
         </Form.Item>
         <Form.Item
-          label="加密结果">
-          <Input.Group compact>
-            <Form.Item
-              name="hash"
-              style={{ width: 'calc(100% - 32px)' }}>
-              <Input />
-            </Form.Item>
-            <Tooltip title="复制">
-              <Button icon={<CopyOutlined />} />
-            </Tooltip>
-          </Input.Group>
+          label="加密结果"
+          name="hash"
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
