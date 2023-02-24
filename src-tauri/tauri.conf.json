@@ -14,6 +14,9 @@
     "allowlist": {
       "all": false,
       "fs": {
+        "scope": [
+          "$APPLOCALDATA/*"
+        ],
         "all": true,
         "readFile": true,
         "writeFile": true,

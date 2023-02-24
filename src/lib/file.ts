@@ -7,6 +7,7 @@ export function defineConfig() {
   }
 }
 
+
 export async function readData() {
   const config = defineConfig();
   return await readTextFile(config.dataFile, { dir: config.baseDir });

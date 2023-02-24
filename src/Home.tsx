@@ -3,17 +3,29 @@ import Search from "antd/es/input/Search";
 import Modal from "antd/es/modal/Modal"
 import Create from './Create';
 import Detail from "./Detail";
-import { useAppSelector } from "./store";
+import { useAppDispatch, useAppSelector } from "./store";
+import { saveToFile, readFromFile } from "./reducer/password";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const initData = useAppSelector(state => state.password);
-  const [data, setData] = useState(initData);
+  const storeDate = useAppSelector(state => state.password);
+  const [data, setData] = useState(storeDate);
 
   useEffect(() => {
-    setData(initData);
-  }, [initData]);
+    if (storeDate.length === 0) {
+      dispatch(readFromFile());
+    }
+
+    return () => {
+      dispatch(saveToFile(JSON.stringify(storeDate)));
+    }
+  }, []);
+
+  useEffect(() => {
+    setData(storeDate);
+  }, [storeDate]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -27,7 +39,7 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const onSearch = (value: string) => setData(initData.filter(item => item.subject.includes(value)));
+  const onSearch = (value: string) => setData(storeDate.filter(item => item.subject.includes(value)));
 
   return (
     <div>
