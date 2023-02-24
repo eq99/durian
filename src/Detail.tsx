@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from './store';
 
 export interface Props {
   data: Password[],
-  setEditDate: React.Dispatch<React.SetStateAction<Password | undefined>>,
+  setEditId: React.Dispatch<React.SetStateAction<string | undefined>>,
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
@@ -57,7 +57,7 @@ export default function App(props: Props) {
           <Button
             type="primary"
             icon={<EditOutlined />}
-            onClick={() => { props.setEditDate(record); props.setOpenEdit(true); }}
+            onClick={() => { props.setEditId(record.id); props.setOpenEdit(true); }}
           />
         </Space>
       ),

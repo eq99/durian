@@ -19,7 +19,7 @@ const algoOptions = [
 ]
 
 export interface Props {
-  data?: Password,
+  editId?: string,
 }
 
 function Content(props: Props) {
@@ -31,6 +31,16 @@ function Content(props: Props) {
   const dispatch = useAppDispatch();
 
   const storeDate = useAppSelector(state => state.password);
+  const editData = storeDate.find(item => item.id === props.editId);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      subject: editData?.subject || "",
+      algo: editData?.algo || algoOptions[0].value,
+      hash: editData?.hash || ""
+    });
+  }, [props.editId]);
+
 
   useEffect(() => {
     form.setFieldValue("raw", raw);
@@ -57,7 +67,7 @@ function Content(props: Props) {
   };
 
   function handleDecry() {
-    let de = decrypt(props.data?.hash || "", secret, props.data?.algo || "");
+    let de = decrypt(editData?.hash || "", secret, editData?.algo || "");
     if (de.length > 0) {
       messageApi.open({
         type: 'success',
@@ -90,11 +100,6 @@ function Content(props: Props) {
         form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{
-          subject: props.data?.subject || "",
-          algo: props.data?.algo || algoOptions[0].value,
-          hash: props.data?.hash || ""
-        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -150,7 +155,7 @@ function Content(props: Props) {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           {
-            props.data &&
+            editData &&
             <Button type="primary" className="mr-4" onClick={() => { handleDecry() }}>
               解密
             </Button>

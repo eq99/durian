@@ -12,7 +12,7 @@ export default function Home() {
 
   const storeDate = useAppSelector(state => state.password);
   const [data, setData] = useState(storeDate);
-  const [editData, setEditDate] = useState<Password>();
+  const [editId, setEditId] = useState<string>();
 
   useEffect(() => {
     if (storeDate.length === 0) {
@@ -48,9 +48,9 @@ export default function Home() {
         <Search placeholder="input search text" className="w-240px" onChange={(e) => onSearch(e.target.value)} onSearch={onSearch} enterButton />
         <Button className="ml-auto" type="primary" onClick={showModal}>添加</Button>
       </div>
-      <Detail data={data} setEditDate={setEditDate} setOpenEdit={setIsModalOpen}></Detail>
+      <Detail data={data} setEditId={setEditId} setOpenEdit={setIsModalOpen}></Detail>
       <Modal className="px-4 py-8" footer={null} style={{ top: 0 }} width={600} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Create data={editData} />
+        <Create editId={editId} />
       </Modal>
     </div>
   )
