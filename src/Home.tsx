@@ -49,7 +49,7 @@ export default function Home() {
         <Button className="ml-auto" type="primary" onClick={showModal}>添加</Button>
       </div>
       <Detail data={data} setEditDate={setEditDate} setOpenEdit={setIsModalOpen}></Detail>
-      <Modal className="px-4 py-8" style={{ top: 0 }} width={600} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal className="px-4 py-8" footer={null} style={{ top: 0 }} width={600} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Create data={editData} />
       </Modal>
     </div>
