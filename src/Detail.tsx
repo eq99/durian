@@ -1,8 +1,6 @@
-import React from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Space, Table, } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import passwordSlice, { Password } from './reducer/password';
-import { useAppSelector } from './store';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -12,7 +10,9 @@ import {
 import { useAppDispatch } from './store';
 
 export interface Props {
-  data: Password[]
+  data: Password[],
+  setEditDate: React.Dispatch<React.SetStateAction<Password | undefined>>,
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function App(props: Props) {
@@ -26,17 +26,19 @@ export default function App(props: Props) {
       title: '应用名称',
       dataIndex: 'subject',
       ellipsis: true,
-
     },
     {
       title: '加密算法',
       dataIndex: 'algo',
     },
     {
+      title: '修改时间',
+      dataIndex: 'createdAt',
+    },
+    {
       title: '加密密码',
       dataIndex: 'hash',
       ellipsis: true,
-
     },
     {
       title: 'Action',
@@ -51,14 +53,7 @@ export default function App(props: Props) {
           <Button
             type="primary"
             icon={<EditOutlined />}
-            onClick={() => console.log(1)
-            }
-          />
-          <Button
-            type="primary"
-            icon={<KeyOutlined />}
-            onClick={() => console.log(1)
-            }
+            onClick={() => { props.setEditDate(record); props.setOpenEdit(true); }}
           />
         </Space>
       ),

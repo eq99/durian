@@ -1,12 +1,12 @@
-import { Button, Form, Input, Select, Tooltip } from "antd";
+import { Button, Form, Input, message, Select, Tooltip } from "antd";
 import { CopyOutlined } from '@ant-design/icons';
 import PassGen from "./PassGen";
 import { encrypt, decrypt } from "./lib";
 import { useAppDispatch } from "./store";
-import passwordSlice from "./reducer/password";
+import passwordSlice, { Password } from "./reducer/password";
 import { nanoid } from "nanoid";
 
-export interface Modal {
+export interface Model {
   raw: string
   subject: string
   algo: string
@@ -17,8 +17,15 @@ const algoOptions = [
   { value: 'aes', label: 'AES' },
 ]
 
-function Content() {
+export interface Props {
+  data?: Password,
+}
+
+function Content(props: Props) {
   const [raw, setRaw] = useState("");
+  const [secret, setSecret] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
@@ -27,7 +34,7 @@ function Content() {
   }, [raw])
 
 
-  const onFinish = (values: Modal) => {
+  const onFinish = (values: Model) => {
     let hash = encrypt(values.raw, values.secret, values.algo);
     form.setFieldValue("hash", hash);
     dispatch(passwordSlice.actions.create({
@@ -35,7 +42,7 @@ function Content() {
       subject: values.subject,
       algo: values.algo,
       hash,
-      createdAt: new Date().toString()
+      createdAt: new Date().toLocaleString()
     }));
   };
 
@@ -43,10 +50,25 @@ function Content() {
     console.log('Failed:', errorInfo);
   };
 
+  function handleDecry() {
+    let de = decrypt(props.data?.hash || "", secret, props.data?.algo || "");
+    if (de.length > 0) {
+      messageApi.open({
+        type: 'success',
+        content: '解密成功',
+      });
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: '解密失败',
+      });
+    }
+    setRaw(de);
+  }
 
   return (
     <div className="flex flex-col items-center">
-
+      {contextHolder}
       {/* 密码生成器 */}
       <PassGen onGen={setRaw}></PassGen>
 
@@ -56,7 +78,11 @@ function Content() {
         form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{ algo: algoOptions[0].value }}
+        initialValues={{
+          subject: props.data?.subject || "",
+          algo: props.data?.algo || "",
+          hash: props.data?.hash || ""
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -93,7 +119,7 @@ function Content() {
         >
           <Select
             style={{ width: 120 }}
-            options={algoOptions }
+            options={algoOptions}
           />
         </Form.Item>
 
@@ -101,7 +127,7 @@ function Content() {
           label="加密密码"
           name="secret"
           rules={[{ required: true, message: '请输入加密密码' }]} >
-          <Input.Password />
+          <Input.Password onChange={(e) => setSecret(e.target.value)} />
         </Form.Item>
         <Form.Item
           label="加密结果">
@@ -118,6 +144,12 @@ function Content() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          {
+            props.data &&
+            <Button type="primary" className="mr-4" onClick={() => { handleDecry() }}>
+              解密
+            </Button>
+          }
           <Button type="primary" htmlType="submit">
             加密并保存
           </Button>

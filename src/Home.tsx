@@ -4,7 +4,7 @@ import Modal from "antd/es/modal/Modal"
 import Create from './Create';
 import Detail from "./Detail";
 import { useAppDispatch, useAppSelector } from "./store";
-import { saveToFile, readFromFile } from "./reducer/password";
+import { saveToFile, readFromFile, Password } from "./reducer/password";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +12,7 @@ export default function Home() {
 
   const storeDate = useAppSelector(state => state.password);
   const [data, setData] = useState(storeDate);
+  const [editData, setEditDate] = useState<Password>();
 
   useEffect(() => {
     if (storeDate.length === 0) {
@@ -47,9 +48,9 @@ export default function Home() {
         <Search placeholder="input search text" className="w-240px" onChange={(e) => onSearch(e.target.value)} onSearch={onSearch} enterButton />
         <Button className="ml-auto" type="primary" onClick={showModal}>添加</Button>
       </div>
-      <Detail data={data}></Detail>
+      <Detail data={data} setEditDate={setEditDate} setOpenEdit={setIsModalOpen}></Detail>
       <Modal className="px-4 py-8" style={{ top: 0 }} width={600} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Create />
+        <Create data={editData} />
       </Modal>
     </div>
   )
