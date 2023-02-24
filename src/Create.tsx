@@ -2,8 +2,8 @@ import { Button, Form, Input, message, Select, Tooltip } from "antd";
 import { CopyOutlined } from '@ant-design/icons';
 import PassGen from "./PassGen";
 import { encrypt, decrypt } from "./lib";
-import { useAppDispatch } from "./store";
-import passwordSlice, { Password } from "./reducer/password";
+import { useAppDispatch, useAppSelector } from "./store";
+import passwordSlice, { Password, saveToFile } from "./reducer/password";
 import { nanoid } from "nanoid";
 import { writeText } from '@tauri-apps/api/clipboard';
 
@@ -30,6 +30,8 @@ function Content(props: Props) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
+  const storeDate = useAppSelector(state => state.password);
+
   useEffect(() => {
     form.setFieldValue("raw", raw);
   }, [raw])
@@ -38,13 +40,16 @@ function Content(props: Props) {
   const onFinish = (values: Model) => {
     let hash = encrypt(values.raw, values.secret, values.algo);
     form.setFieldValue("hash", hash);
-    dispatch(passwordSlice.actions.create({
+    let newPass =
+    {
       id: nanoid(10),
       subject: values.subject,
       algo: values.algo,
       hash,
       createdAt: new Date().toLocaleString()
-    }));
+    }
+    dispatch(passwordSlice.actions.create(newPass));
+    dispatch(saveToFile(JSON.stringify([...storeDate, newPass])));
   };
 
   const onFinishFailed = (errorInfo: any) => {

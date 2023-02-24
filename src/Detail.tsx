@@ -1,13 +1,12 @@
 import { Button, Space, Table, } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import passwordSlice, { Password } from './reducer/password';
+import passwordSlice, { Password, saveToFile } from './reducer/password';
 import {
   DeleteOutlined,
   EditOutlined,
-  KeyOutlined,
 } from '@ant-design/icons';
 
-import { useAppDispatch } from './store';
+import { useAppDispatch, useAppSelector } from './store';
 
 export interface Props {
   data: Password[],
@@ -17,6 +16,8 @@ export interface Props {
 
 export default function App(props: Props) {
   const dispatch = useAppDispatch();
+
+  const storeDate = useAppSelector(state => state.password);
   const columns: ColumnsType<Password> = [
     {
       title: 'Id',
@@ -48,7 +49,10 @@ export default function App(props: Props) {
             type="primary"
             danger
             icon={<DeleteOutlined />}
-            onClick={() => dispatch(passwordSlice.actions.remove(record.id))}
+            onClick={() => {
+              dispatch(passwordSlice.actions.remove(record.id));
+              dispatch(saveToFile(JSON.stringify(storeDate.filter(item => item.id !== record.id))))
+            }}
           />
           <Button
             type="primary"
